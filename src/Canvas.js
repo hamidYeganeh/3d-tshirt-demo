@@ -5,6 +5,8 @@ import { easing } from 'maath'
 import { useSnapshot } from 'valtio'
 import { state } from './store'
 
+const ShirtAddress = '/shirt_baked_collapsed.glb'
+
 export const App = ({ position = [0, 0, 2.5], fov = 25 }) => (
   <Canvas shadows camera={{ position, fov }} gl={{ preserveDrawingBuffer: true }} eventSource={document.getElementById('root')} eventPrefix="client">
     <ambientLight intensity={0.5 * Math.PI} />
@@ -42,7 +44,7 @@ function CameraRig({ children }) {
   const snap = useSnapshot(state)
   useFrame((state, delta) => {
     easing.damp3(state.camera.position, [snap.intro ? -state.viewport.width / 4 : 0, 0, 2], 0.25, delta)
-    easing.dampE(group.current.rotation, [state.pointer.y / 10, -state.pointer.x / 5, 0], 0.25, delta)
+    easing.dampE(group.current.rotation, [state.pointer.y, -state.pointer.x, 0], 0.25, delta)
   })
   return <group ref={group}>{children}</group>
 }
@@ -50,14 +52,16 @@ function CameraRig({ children }) {
 function Shirt(props) {
   const snap = useSnapshot(state)
   const texture = useTexture(`/${snap.decal}.png`)
-  const { nodes, materials } = useGLTF('/shirt_baked_collapsed.glb')
+  const secondTexture = useTexture(`/spexup.png`)
+  const { nodes, materials } = useGLTF(ShirtAddress)
   useFrame((state, delta) => easing.dampC(materials.lambert1.color, snap.color, 0.25, delta))
   return (
     <mesh castShadow geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-roughness={1} {...props} dispose={null}>
       <Decal position={[0, 0.04, 0.15]} rotation={[0, 0, 0]} scale={0.15} map={texture} />
+      <Decal position={[0.1, -0.1, 0.15]} rotation={[0, 0, 0]} scale={0.2} map={secondTexture} />
     </mesh>
   )
 }
 
-useGLTF.preload('/shirt_baked_collapsed.glb')
-;['/react.png', '/three2.png', '/pmndrs.png'].forEach(useTexture.preload)
+useGLTF.preload(ShirtAddress)
+;['/react.png', '/three2.png', '/pmndrs.png', '/spexup.png'].forEach(useTexture.preload)
