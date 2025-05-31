@@ -12,7 +12,9 @@
     "@react-three/fiber": "8.17.10",
     "@types/three": "0.152.1",
     "framer-motion": "10.0.1",
+    "leva": "^0.10.0",
     "maath": "0.6.0",
+    "r3f-perf": "^1.2.0",
     "react": "18.2.0",
     "react-colorful": "5.6.1",
     "react-dom": "18.2.0",
@@ -21,7 +23,6 @@
     "three": "0.170.0",
     "valtio": "1.10.3"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
